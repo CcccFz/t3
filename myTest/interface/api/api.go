@@ -5,11 +5,23 @@ import (
 	"main/myTest/interface/dto"
 )
 
+func UserRegister(c *gin.Context) {
+	req := new(dto.UserRegisterReq)
+}
+
+func DriverRegister(c *gin.Context) {
+	req := new(dto.DriverRegisterReq)
+}
+
 func UserLogin(c *gin.Context) {
 	req := new(dto.UserLoginReq)
 }
 
-func UserDelete(c *gin.Context) {
+func DriverLogin(c *gin.Context) {
+	req := new(dto.DriverLoginReq)
+}
+
+func Userlogout(c *gin.Context) {
 	req := new(dto.UserReq)
 }
 
@@ -22,13 +34,7 @@ func UserDetail(c *gin.Context) {
 	rsp := new(dto.UserDetailRsp)
 }
 
-func DriverLogin(c *gin.Context) {
-	req := new(dto.DriverLoginReq)
-}
-
-func DriverDelete(c *gin.Context) {
-	req := new(dto.DriverReq)
-}
+func Driverlogout(c *gin.Context) {}
 
 func DriverUpdate(c *gin.Context) {
 	req := new(dto.DriverUpdateReq)
@@ -56,60 +62,42 @@ func CarDetail(c *gin.Context) {
 	rsp := new(dto.CarDetailRsp)
 }
 
-func RouteCreate(c *gin.Context) {
-	req := new(dto.RouteCreateReq)
-	rsp := new(dto.RouteCreateRsp)
+func TrackCreate(c *gin.Context) {
+	req := new(dto.TrackCreateReq)
+	rsp := new(dto.TrackCreateRsp)
 }
 
-func RouteMatch(c *gin.Context) {
-	req := new(dto.RouteMatchReq)
+func TrackCancel(c *gin.Context) {
+	req := new(dto.TrackCancelReq)
 }
 
-func RouteSet(c *gin.Context) {
-	req := new(dto.RouteSetReq)
+func TrackStatusSet(c *gin.Context) {
+	req := new(dto.TrackSetReq)
 }
 
-func RouteUpdate(c *gin.Context) {
-	req := new(dto.RouteUpdateReq)
+func TrackUpdate(c *gin.Context) {
+	req := new(dto.TrackUpdateReq)
 }
 
-func RouteDelete(c *gin.Context) {
-	req := new(dto.RouteReq)
+func TrackDelete(c *gin.Context) {
+	req := new(dto.TrackReq)
 }
 
-func RouteList(c *gin.Context) {
+func TrackList(c *gin.Context) {
 	req := new(dto.UserReq)
-	rsp := new(dto.RouteListRsp)
+	rsp := new(dto.TrackListRsp)
 }
 
-func RouteDetail(c *gin.Context) {
-	req := new(dto.RouteReq)
-	rsp := new(dto.RouteDetailRsp)
+func TrackDetail(c *gin.Context) {
+	req := new(dto.TrackReq)
+	rsp := new(dto.TrackDetailRsp)
 }
 
-func OrderCreate(c *gin.Context) {
-	req := new(dto.OrderCreateReq)
-	rsp := new(dto.OrderCreateRsp)
+func OrderDetail(c *gin.Context) {
+	rsq := new(dto.OrderDetailReq)
 }
 
-func OrderSet(c *gin.Context) {
-	req := new(dto.OrderSetReq)
+func PaymentNotifyPay(c *gin.Context) {
+	req := new(dto.PaymentNotifyPayReq)
 }
-
-func OrderDelete(c *gin.Context) {
-	req := new(dto.OrderReq)
-}
-
-func PaymentCreate(c *gin.Context) {
-	req := new(dto.PaymentCreateReq)
-	rsq := new(dto.PaymentCreateRsp)
-}
-
-func PaymentSet(c *gin.Context) {
-	req := new(dto.PaymentSetReq)
-}
-
-func PaymentDetail(c *gin.Context) {
-	req := new(dto.PaymentReq)
-	rsp := new(dto.RouteDetailRsp)
 }

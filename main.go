@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"main/myTest/common/jwt"
 	"main/myTest/common/store"
 	"main/myTest/interface/api"
@@ -16,43 +17,40 @@ func main() {
 	fmt.Println("码运昌隆！")
 	store.MyAuto()
 	myHttp := gin.Default()
-	myHttp.Use(jwt.JWT(store.CACHE))
+
+	myHttp.POST("/api/t3/user/user/register", api.UserRegister)     // 乘客/注册登录
+	myHttp.POST("/api/t3/user/driver/register", api.DriverRegister) // 司机/注册登录
+	myHttp.POST("/api/t3/user/user/login", api.UserLogin)           // 乘客&司机/注册登录
+	myHttp.POST("/api/t3/user/driver/login", api.DriverLogin)       // 司机/退出登录
 
 	// t3go URL
 	// 乘客，司机，车，行程，订单，支付
-	myHttp.POST("/t3go/api/user/passenger/login", api.UserLogin)   //乘客注册登录
-	myHttp.POST("/t3go/api/user/passenger/delete", api.UserDelete) //乘客注销账号
-	myHttp.POST("/t3go/api/user/passenger/update", api.UserUpdate) //更新乘客基本信息
-	myHttp.POST("/t3go/api/user/passenger/detail", api.UserDetail) //查看乘客详细信息
+	myHttp.Use(jwt.JWT(store.CACHE))
+	myHttp.POST("/api/t3/user/user/logout", api.Userlogout) // 乘客/退出登录
+	myHttp.POST("/api/t3/user/user/update", api.UserUpdate) // 乘客/更新基本信息
+	myHttp.POST("/api/t3/user/user/detail", api.UserDetail) // 乘客/查看详细信息
 
-	myHttp.POST("/t3go/api/user/driver/login", api.DriverLogin)   //司机注册登录
-	myHttp.POST("/t3go/api/user/driver/delete", api.DriverDelete) //司机注销账号
-	myHttp.POST("/t3go/api/user/driver/update", api.DriverUpdate) //更新司机基本信息
-	myHttp.POST("/t3go/api/user/driver/detail", api.DriverDetail) //查看司机详细信息
+	myHttp.POST("/api/t3/user/driver/logout", api.Driverlogout) // 司机/退出登录
+	myHttp.POST("/api/t3/user/driver/update", api.DriverUpdate) // 司机/更新基本信息
+	myHttp.POST("/api/t3/user/driver/detail", api.DriverDetail) // 司机/查看详细信息
 
-	myHttp.POST("/t3go/api/car/create", api.CarCreate) //新增网约车
-	myHttp.POST("/t3go/api/car/update", api.CarUpdate) //更新网约车基本信息
-	myHttp.POST("/t3go/api/car/delete", api.CarDelete) //删除网约车
-	myHttp.POST("/t3go/api/car/detail", api.CarDetail) //查看网约车详细信息
+	myHttp.POST("/api/t3/car/detail", api.CarDetail) // 车/查看详细信息
 
-	myHttp.POST("/t3go/api/route/create", api.RouteCreate) //新增行程
-	myHttp.POST("/t3go/api/route/set", api.RouteSet)       //更新行程状态（司机已到达目的地，行程开始，取消行程）
-	myHttp.POST("/t3go/api/route/update", api.RouteUpdate) //修改行程(例如修改目的地)
-	myHttp.POST("/t3go/api/route/delete", api.RouteDelete) //删除行程
-	myHttp.POST("/t3go/api/order/list", api.RouteList)     //查询行程列表
-	myHttp.POST("/t3go/api/order/detail", api.RouteDetail) //查看行程详细信息
+	myHttp.POST("/api/t3/track/create", api.TrackCreate)        // 行程/新增
+	myHttp.POST("/api/t3/track/cancel", api.TrackCancel)        // 行程/取消
+	myHttp.POST("/api/t3/track/status/set", api.TrackStatusSet) // 行程/更新状态（司机正在赶来,司机已到达目的地，行程开始，行程结束）
+	myHttp.POST("/api/t3/track/update", api.TrackUpdate)        // 行程/修改(例如修改目的地)
+	myHttp.POST("/api/t3/track/delete", api.TrackDelete)        // 行程/删除
+	myHttp.POST("/api/t3/track/list", api.TrackList)            // 行程/查询列表
+	myHttp.POST("/api/t3/track/detail", api.TrackDetail)        // 行程/查看详细信息
 
-	myHttp.POST("/t3go/api/order/create", api.OrderCreate) //新增订单(行程状态为司机正在赶来)
-	myHttp.POST("/t3go/api/order/set", api.OrderSet)       //完成订单
-	myHttp.POST("/t3go/api/order/delete", api.OrderDelete) //删除订单
+	myHttp.POST("/api/t3/order/detail", api.OrderDetail) // 订单/查看详细信息
 
-	myHttp.POST("/t3go/api/payment/create", api.PaymentCreate) //新增支付(行程结束)
-	myHttp.POST("/t3go/api/payment/set", api.PaymentSet)       //支付成功
-	myHttp.POST("/t3go/api/payment/detail", api.PaymentDetail) //查看支付详细信息
+	myHttp.POST("/api/t3/payment/notify/pay", api.PaymentNotifyPay) // 支付/新增(行程结束)
 
 	err := myHttp.Run(":8010")
 	if err != nil {
-		fmt.Println(err)
+		log.Info().Err(err)
 		return
 	}
 }

@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+type UserType uint8
+
 type UserLevel uint8
 
 type CarLevel uint8
@@ -13,9 +15,9 @@ type CarType uint8
 
 type Sex uint8
 
-type RouteStatus uint8
+type TrackStatus uint8
 
-type RouteSchedule uint8
+type TrackSchedule uint8
 
 type OrderStatus uint8
 

@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	CachePrefixTokenJWT    = "token:jwt:"
-	cacheKeyTokenJWTSystem = "token:jwt:system"
+	CachePrefixTokenJWT = "token:jwt:"
 )
 
 func JWT(cache *redis.Client) gin.HandlerFunc {
@@ -35,22 +34,22 @@ func JWT(cache *redis.Client) gin.HandlerFunc {
 		}
 
 		token := auths[1]
-		id, newtoken, err := verifyToken(token, cache)
+		id, err := verifyToken(token, cache)
 		if err != nil {
 			http.ErrJson(c, err)
 			c.Abort()
 			return
 		}
 
-		if newtoken != "" {
-			c.Header("Authorization", newtoken)
-		}
+		//if newtoken != "" {
+		//	c.Header("Authorization", newtoken)
+		//}
 		c.Set("id", id)
 		c.Next()
 	}
 }
 
-func verifyToken(token string, cache *redis.Client) (id uint, newtoken string, err error) {
+func verifyToken(token string, cache *redis.Client) (id uint, err error) {
 	claim, err := parseToken(token)
 	if err != nil {
 		return
@@ -58,7 +57,7 @@ func verifyToken(token string, cache *redis.Client) (id uint, newtoken string, e
 	key := CachePrefixTokenJWT + claim.Id
 	cacheToken, err := cache.Get(key).Result()
 	if err == redis.Nil { //？？？？
-		err = errors.New("已在其它设备登录，请重新登陆")
+		err = errors.New("登录过期，请重新登录")
 		return
 	}
 	if err != nil {
@@ -69,21 +68,25 @@ func verifyToken(token string, cache *redis.Client) (id uint, newtoken string, e
 		return
 	}
 
-	id = cast.ToUint(claim.Id) //？？？？
-	if claim.ExpiresAt > time.Now().Unix() {
-		return
-	}
-	newtoken, err = GenToken(id)
+	id = cast.ToUint(claim.Id)
+	//if claim.ExpiresAt > time.Now().Unix() {
+	//	return
+	//}
+	//newtoken, err = GenToken(id, store.CACHE)
 	return
 }
 
-func GenToken(id uint) (newtoken string, err error) {
+func GenToken(id uint, cache *redis.Client) (newtoken string, err error) {
 	now := time.Now().Unix()
 	if newtoken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Id:        cast.ToString(id),
 		IssuedAt:  now,
 		ExpiresAt: now + int64(2*time.Hour/time.Second),
 	}).SignedString([]byte("JWT1OGHNS0MSE9AUKDCDOMB65BNLVSA0")); err != nil {
+		return
+	}
+	key := CachePrefixTokenJWT + cast.ToString(id)
+	if err = cache.Set(key, newtoken, 2*time.Hour/time.Second).Err(); err != nil {
 		return
 	}
 	return
