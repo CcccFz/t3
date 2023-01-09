@@ -7,7 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"main/myTest/entity"
+	"main/myTest/domain/entity"
 )
 
 var DB = MyMysql("t3")

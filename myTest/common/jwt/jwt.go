@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
 	"github.com/spf13/cast"
-	"main/myTest/http"
+	"main/myTest/common/http"
 	"strings"
 	"time"
 )

@@ -1,6 +1,8 @@
 package dto
 
-import "main/myTest/entity"
+import (
+	"main/myTest/domain/entity"
+)
 
 type UserReq struct {
 	// 用户ID
@@ -43,7 +45,7 @@ type UserDetailRsp struct {
 	// 性别（1-男，2-女）
 	Sex entity.Sex `json:"sex" form:"sex" enums:"1,2" example:"1"`
 	// 用户等级（1-大众，2-白银，3-黄金，4-铂金，5-黑金）
-	Level entity.Level `json:"user_level" form:"user_level" enums:"1,2,3,4,5" example:"3"`
+	UserLevel entity.UserLevel `json:"user_level" form:"user_level" enums:"1,2,3,4,5" example:"3"`
 	// 成长值
 	GrowthNumber uint `json:"growth_number" form:"growth_number" example:"10"`
 }
@@ -89,7 +91,7 @@ type DriverDetailRsp struct {
 	// 性别（1-男，2-女）
 	Sex entity.Sex `json:"sex" form:"sex" enums:"1,2" example:"1"`
 	// 等级（（1-大众，2-白银，3-黄金，4-铂金，5-黑金））
-	Level entity.Level `json:"driver_level" form:"driver_level" enums:"1,2,3,4,5" example:"3"`
+	UserLevel entity.UserLevel `json:"driver_level" form:"driver_level" enums:"1,2,3,4,5" example:"3"`
 	// 成长值
 	GrowthNumber uint `json:"growth_number" form:"growth_number" example:"10"`
 	// 总里程数
@@ -107,7 +109,7 @@ type CarCreateReq struct {
 	// 车牌号// 这里len是多少
 	CarId string `json:"car_id" form:"car_id" bonding:"required" example:"川AA85409"`
 	// 车类型（1-网约车，2-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" bonding:"required" enums:"1,2" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" bonding:"required" enums:"1,2" example:"2"`
 	// 车品牌
 	CarBrand string `json:"car_brand" form:"car_brand" bonding:"required" example:"东风"`
 	// 车年限
@@ -118,7 +120,7 @@ type CarUpdateReq struct {
 	// 车牌号// 这里len是多少
 	CarId string `json:"car_id" form:"car_id" example:"川AA85409"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
 	// 车品牌
 	CarBrand string `json:"car_brand" form:"car_brand" example:"东风"`
 	// 车年限
@@ -131,7 +133,7 @@ type CarDetailRsp struct {
 	// 车牌号// 这里len是多少
 	CarId string `json:"car_id" form:"car_id"  example:"川AA85409"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
 	// 车品牌
 	CarBrand string `json:"car_brand" form:"car_brand" example:"东风"`
 	// 车年限
@@ -153,7 +155,7 @@ type RouteCreateReq struct {
 	// 路线
 	Path string `json:"path" form:"path" bonding:"required" example:"1"`
 	// 车类型
-	CarType entity.Cartype `json:"car_type" form:"car_type" bonding:"required" enums:"1,2,3,4,5,6,7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" bonding:"required" enums:"1,2,3,4,5,6,7" example:"2"`
 }
 
 type RouteCreateRsp struct {
@@ -164,7 +166,7 @@ type RouteCreateRsp struct {
 	// 路线
 	Path string `json:"path" form:"path" example:"1"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2,3,4,5,6,7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2,3,4,5,6,7" example:"2"`
 	// 里程数（公里）
 	RouteCourses uint `json:"route_courses" form:"route_courses" example:"100"`
 	// 时长(分钟)
@@ -198,7 +200,7 @@ type RouteItem struct {
 	// 行程ID
 	RouteId uint `json:"route_id" form:"route_id" example:"1"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
 	// 出发地点
 	Outset string `json:"outset" form:"outset" example:"亚洲湾小区南门"`
 	// 目的地
@@ -225,7 +227,7 @@ type RouteDetailRsp struct {
 	// 车牌号// 这里len是多少
 	CarId string `json:"car_id" form:"car_id"  example:"川AA85409"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
 	// 行程状态(1-进行中，2-已完成，3-已取消)
 	RouteStatus entity.RouteStatus `json:"status" form:"status" enums:"1,2,3" example:"2"`
 	// 创建时间（时间戳）
@@ -262,7 +264,7 @@ type OrderCreateRsp struct {
 	// 车牌号// 这里len是多少
 	CarId string `json:"car_id" form:"car_id"  example:"川AA85409"`
 	// 车类型（1-网约车特享，2-网约车惠享，3-网约车快享，4-网约车速享，5-拼车，6-自营出租车，7-出租车）
-	CarType entity.Cartype `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
+	CarType entity.CarType `json:"car_type" form:"car_type" enums:"1,2，3，4，5，6，7" example:"2"`
 	// 行程状态(1-进行中，2-已完成，3-已取消)
 	RouteStatus entity.RouteStatus `json:"status" form:"status" enums:"1,2,3" example:"2"`
 	// 创建时间（时间戳）

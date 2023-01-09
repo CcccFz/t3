@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"main/myTest/dto"
+	"main/myTest/interface/dto"
 )
 
 func UserLogin(c *gin.Context) {
