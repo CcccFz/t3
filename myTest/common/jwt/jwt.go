@@ -86,7 +86,7 @@ func GenToken(id uint, cache *redis.Client) (newtoken string, err error) {
 		return
 	}
 	key := CachePrefixTokenJWT + cast.ToString(id)
-	if err = cache.Set(key, newtoken, 2*time.Hour/time.Second).Err(); err != nil {
+	if err = cache.Set(key, newtoken, 2*time.Hour).Err(); err != nil {
 		return
 	}
 	return

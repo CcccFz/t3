@@ -22,7 +22,6 @@ func DriverLogin(c *gin.Context) {
 }
 
 func Userlogout(c *gin.Context) {
-	req := new(dto.UserReq)
 }
 
 func UserUpdate(c *gin.Context) {
@@ -30,7 +29,6 @@ func UserUpdate(c *gin.Context) {
 }
 
 func UserDetail(c *gin.Context) {
-	req := new(dto.UserReq)
 	rsp := new(dto.UserDetailRsp)
 }
 
@@ -41,20 +39,7 @@ func DriverUpdate(c *gin.Context) {
 }
 
 func DriverDetail(c *gin.Context) {
-	req := new(dto.DriverReq)
 	rsp := new(dto.DriverDetailRsp)
-}
-
-func CarCreate(c *gin.Context) {
-	req := new(dto.CarCreateReq)
-}
-
-func CarUpdate(c *gin.Context) {
-	req := new(dto.CarUpdateReq)
-}
-
-func CarDelete(c *gin.Context) {
-	req := new(dto.CarReq)
 }
 
 func CarDetail(c *gin.Context) {
@@ -68,23 +53,22 @@ func TrackCreate(c *gin.Context) {
 }
 
 func TrackCancel(c *gin.Context) {
-	req := new(dto.TrackCancelReq)
 }
 
 func TrackStatusSet(c *gin.Context) {
 	req := new(dto.TrackSetReq)
+	rsp := new(dto.TrackSetRsp)
 }
 
 func TrackUpdate(c *gin.Context) {
 	req := new(dto.TrackUpdateReq)
 }
 
-func TrackDelete(c *gin.Context) {
-	req := new(dto.TrackReq)
+func TrackCurrent(c *gin.Context) {
+	rsp := new(dto.TrackDetailRsp)
 }
 
 func TrackList(c *gin.Context) {
-	req := new(dto.UserReq)
 	rsp := new(dto.TrackListRsp)
 }
 
@@ -94,10 +78,13 @@ func TrackDetail(c *gin.Context) {
 }
 
 func OrderDetail(c *gin.Context) {
-	rsq := new(dto.OrderDetailReq)
+	rsp := new(dto.OrderDetailRsp)
 }
 
 func PaymentNotifyPay(c *gin.Context) {
 	req := new(dto.PaymentNotifyPayReq)
 }
+
+func PaymentDetail(c *gin.Context) {
+	rsp := new(dto.PaymentDetailRsp)
 }
