@@ -1,8 +1,8 @@
 package dto
 
 import (
+	"main/myTest/common/http"
 	"main/myTest/domain/entity"
-	"time"
 )
 
 type UserReq struct {
@@ -130,7 +130,11 @@ type TrackCreateReq struct {
 	// 目的地
 	DestPoint string `json:"dest_point" form:"dest_point" binding:"required" example:"华为技术有限公司三号门"`
 	// 车类型（1-特享，2-惠享）
-	CarType []*entity.CarType `json:"car_type" form:"car_type" binding:"required" enums:"[1,2]" example:"2"`
+	CarType []entity.CarType `json:"car_type" form:"car_type" binding:"required" enums:"[1,2]" example:"2"`
+	// 里程数（公里）
+	Distance uint `json:"distance" example:"100"`
+	// 时长(分钟)
+	Duration uint `json:"duration" example:"9"`
 }
 
 type TrackCreateRsp struct {
@@ -145,11 +149,11 @@ type TrackCreateRsp struct {
 	// 目的地
 	DestPoint string `json:"dest_point" example:"华为技术有限公司三号门"`
 	// 车类型（1-特享，2-惠享）
-	CarType []*entity.CarType `json:"car_type" enums:"[1,2]" example:"2"`
+	CarType []entity.CarType `json:"car_type" enums:"[1,2]" example:"2"`
 	// 里程数（公里）
-	TrackCourses uint `json:"track_courses" example:"100"`
+	Distance uint `json:"distance" example:"100"`
 	// 时长(分钟)
-	TrackTime uint `json:"track_time" example:"9"`
+	Duration uint `json:"duration" example:"9"`
 }
 
 type TrackSetReq struct {
@@ -159,11 +163,6 @@ type TrackSetReq struct {
 	TrackStatus entity.TrackStatus `json:"track_status" form:"track_status" binding:"required" enums:"2,3,4,5" example:"3"`
 }
 
-type TrackSetRsp struct {
-	// 金额（元）
-	Cost uint `json:"cost" example:"9.60"`
-}
-
 type TrackUpdateReq struct {
 	// 行程ID
 	TrackId uint `json:"track_id" form:"track_id" binding:"required" example:"1"`
@@ -171,13 +170,21 @@ type TrackUpdateReq struct {
 	DestPoint string `json:"dest_point" form:"dest_point" example:"华为技术有限公司三号门"`
 }
 
+type TrackListReq struct {
+	*http.Page
+	// 行程状态(1-待接单,2-待赶来,3-待上车,4-进行中,5-待支付,6-已完成,10-已取消)
+	TrackStatus entity.TrackStatus `json:"track_status" form:"track_status" enums:"1,2,3,4,5,6,10" example:"2"`
+	// 创建时间（时间戳）
+	CreatedAt string `json:"created_at" form:"created_at" example:"2022-04-05 15:30:12"`
+}
+
 type TrackListRsp struct {
-	// 用户ID
-	UserId uint         `json:"user_id" form:"user_id" example:"10"`
 	Tracks []*TrackItem `json:"tracks"`
 }
 
 type TrackItem struct {
+	// 用户ID
+	UserId uint `json:"user_id" form:"user_id" example:"10"`
 	// 行程ID
 	TrackId uint `json:"track_id" form:"track_id" binding:"required" example:"1"`
 	// 车Id
@@ -189,14 +196,16 @@ type TrackItem struct {
 	// 目的地
 	DestPoint string `json:"dest_point" example:"华为技术有限公司三号门"`
 	// 行程状态(1-待接单,2-待赶来,3-待上车,4-进行中,5-待支付,6-已完成,10-已取消)
-	TrackStatus entity.TrackStatus `json:"status" enums:"1,2,3,4,5,6,10" example:"2"`
+	TrackStatus entity.TrackStatus `json:"track_status" enums:"1,2,3,4,5,6,10" example:"2"`
 	// 创建时间（时间戳）
-	CreatedAt time.Time `json:"created_at" example:"1" example:"1630724893"`
+	CreatedAt string `json:"created_at" example:"2022-04-05 15:30:12"`
 }
 
 type TrackDetailRsp struct {
 	// 用户ID
 	UserId uint `json:"user_id" form:"user_id" example:"10"`
+	// 司机ID
+	ServicerId uint `json:"servicer_id" example:"4"`
 	// 行程ID
 	TrackId uint `json:"track_id" form:"track_id" binding:"required" example:"1"`
 	// 车Id
@@ -216,7 +225,12 @@ type TrackDetailRsp struct {
 	// 金额（元）
 	Cost uint `json:"cost" example:"9.60"`
 	// 创建时间（时间戳）
-	CreatedAt int64 `json:"created_at" example:"1" example:"1630724893"`
+	CreatedAt string `json:"created_at" example:"2022-04-05 15:30:12"`
+}
+
+type OrderReq struct {
+	// 订单ID
+	OrderId uint `json:"order_id" example:"8"`
 }
 
 type OrderDetailRsp struct {
@@ -226,16 +240,14 @@ type OrderDetailRsp struct {
 	UserId uint `json:"user_id" example:"10"`
 	// 司机ID
 	ServicerId uint `json:"servicer_id" example:"4"`
-	// 行程ID
-	TrackId uint `json:"track_id" example:"1"`
-	// 车Id
-	CarId uint `json:"car_id" form:"car_id" binding:"required" example:"1"`
+	// 支付ID
+	PaymentId uint `json:"payment_id" example:"9"`
 	// 起步价（元）
 	StartCost uint `json:"start_cost" example:"9"`
 	// 单价(每分钟)
 	UnitCost uint `json:"unit_cost" example:"0.2"`
-	// 创建时间（时间戳）
-	CreatedAt int64 `json:"created_at" example:"1" example:"1630724893"`
+	// 创建时间
+	CreatedAt string `json:"created_at" example:"2022-04-05 15:30:12"`
 }
 
 type PaymentNotifyPayReq struct {
@@ -245,13 +257,16 @@ type PaymentNotifyPayReq struct {
 	PaymentMethod entity.PaymentMethod `json:"payment_method" form:"payment_method" binding:"required" enums:"1,2,3,4" example:"1"`
 }
 
-type PaymentDetailRsp struct {
+type PaymentReq struct {
 	// 支付ID
 	PaymentId uint `json:"payment_id" example:"9"`
-	// 订单ID
-	OrderId uint `json:"order_id" example:"8"`
+}
+
+type PaymentDetailRsp struct {
 	// 金额（元）
 	Cost uint `json:"cost" example:"9.60"`
+	// 支付状态(1-待支付，2-已支付)
+	PaymentStatus entity.PaymentStatus `json:"payment_status" enums:"1,2" example:"1"`
 	// 支付方式(1-支付宝支付，2-微信支付，3-银行卡支付，4-云闪付支付)
 	PaymentMethod entity.PaymentMethod `json:"payment_method" form:"payment_method" enums:"1,2,3,4" example:"1"`
 }

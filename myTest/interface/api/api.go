@@ -39,6 +39,7 @@ func DriverUpdate(c *gin.Context) {
 }
 
 func DriverDetail(c *gin.Context) {
+	req := new(dto.DriverReq)
 	rsp := new(dto.DriverDetailRsp)
 }
 
@@ -69,6 +70,7 @@ func TrackCurrent(c *gin.Context) {
 }
 
 func TrackList(c *gin.Context) {
+	req := new(dto.TrackListReq)
 	rsp := new(dto.TrackListRsp)
 }
 
@@ -78,6 +80,7 @@ func TrackDetail(c *gin.Context) {
 }
 
 func OrderDetail(c *gin.Context) {
+	req := new(dto.OrderReq)
 	rsp := new(dto.OrderDetailRsp)
 }
 
@@ -86,5 +89,6 @@ func PaymentNotifyPay(c *gin.Context) {
 }
 
 func PaymentDetail(c *gin.Context) {
+	req := new(dto.PaymentReq)
 	rsp := new(dto.PaymentDetailRsp)
 }
