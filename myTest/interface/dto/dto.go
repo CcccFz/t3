@@ -252,8 +252,6 @@ type PaymentDetailRsp struct {
 	OrderId uint `json:"order_id" example:"8"`
 	// 金额（元）
 	Cost uint `json:"cost" example:"9.60"`
-	// 支付状态(1-待支付，2-已支付)
-	PaymentStatus entity.PaymentStatus `json:"payment_status" enums:"1,2" example:"1"`
 	// 支付方式(1-支付宝支付，2-微信支付，3-银行卡支付，4-云闪付支付)
 	PaymentMethod entity.PaymentMethod `json:"payment_method" form:"payment_method" enums:"1,2,3,4" example:"1"`
 }
