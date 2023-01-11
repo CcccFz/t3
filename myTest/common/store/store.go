@@ -72,6 +72,7 @@ func init() {
 func MyAuto() {
 	test := new(entity.Order)
 	user := new(entity.User)
+
 	if err := DB.AutoMigrate(test); err != nil {
 		fmt.Println("error")
 	}

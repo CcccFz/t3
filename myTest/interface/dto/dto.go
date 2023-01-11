@@ -60,7 +60,7 @@ type DriverRegisterReq struct {
 	Phone uint `json:"phone" form:"phone" binding:"required" example:"13981556666"`
 	// 车牌号/
 	CarNo string `json:"car_no" form:"car_no" binding:"required" example:"川AA85409"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType entity.CarType `json:"car_type" form:"car_type" binding:"required" enums:"1,2" example:"2"`
 	// 车品牌
 	CarBrand string `json:"car_brand" form:"car_brand" binding:"required" example:"东风"`
@@ -109,7 +109,7 @@ type CarDetailRsp struct {
 	CarId uint `json:"car_id" form:"car_id" binding:"required" example:"1"`
 	// 车牌号
 	CarNo string `json:"car_no" example:"川AA85409"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType entity.CarType `json:"car_type" enums:"1,2" example:"2"`
 	// 车品牌
 	CarBrand string `json:"car_brand" example:"东风"`
@@ -129,12 +129,8 @@ type TrackCreateReq struct {
 	SrcPoint string `json:"src_point" form:"src_point" binding:"required" example:"亚洲湾小区南门"`
 	// 目的地
 	DestPoint string `json:"dest_point" form:"dest_point" binding:"required" example:"华为技术有限公司三号门"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType []entity.CarType `json:"car_type" form:"car_type" binding:"required" enums:"[1,2]" example:"2"`
-	// 里程数（公里）
-	Distance uint `json:"distance" example:"100"`
-	// 时长(分钟)
-	Duration uint `json:"duration" example:"9"`
 }
 
 type TrackCreateRsp struct {
@@ -148,7 +144,7 @@ type TrackCreateRsp struct {
 	SrcPoint string `json:"src_point" example:"亚洲湾小区南门"`
 	// 目的地
 	DestPoint string `json:"dest_point" example:"华为技术有限公司三号门"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType []entity.CarType `json:"car_type" enums:"[1,2]" example:"2"`
 	// 里程数（公里）
 	Distance uint `json:"distance" example:"100"`
@@ -189,7 +185,7 @@ type TrackItem struct {
 	TrackId uint `json:"track_id" form:"track_id" binding:"required" example:"1"`
 	// 车Id
 	CarId uint `json:"car_id" form:"car_id" binding:"required" example:"1"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType entity.CarType `json:"car_type" enums:"1,2" example:"2"`
 	// 出发地点
 	SrcPoint string `json:"src_point" example:"亚洲湾小区南门"`
@@ -218,10 +214,10 @@ type TrackDetailRsp struct {
 	UserName string `json:"user_name" example:"duome"`
 	// 车牌号
 	CarNo string `json:"car_no" example:"川AA85409"`
-	// 车类型（1-特享，2-惠享）
+	// 车类型（1-优享，2-惠享）
 	CarType entity.CarType `json:"car_type" enums:"1,2" example:"2"`
 	// 行程状态(1-待接单,2-待赶来,3-待上车,4-进行中,5-待支付,6-已完成,10-已取消)
-	TrackStatus entity.TrackStatus `json:"status" enums:"1,2,3,4,5,6,10" example:"2"`
+	TrackStatus entity.TrackStatus `json:"track_status" enums:"1,2,3,4,5,6,10" example:"2"`
 	// 金额（元）
 	Cost uint `json:"cost" example:"9.60"`
 	// 创建时间（时间戳）

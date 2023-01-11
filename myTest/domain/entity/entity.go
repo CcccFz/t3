@@ -7,13 +7,45 @@ import (
 
 type UserType uint8
 
+const (
+	UserTypeUser UserType = 1
+	UserTypeServicer _ = 2
+)
+
 type CarType uint8
+
+const (
+	CarTypeCosy      CarType = 1 // 优享
+	CarTypeFavorable _       = 1 // 惠享
+)
 
 type TrackStatus uint8
 
+const (
+	TrackStatusOrdering  TrackStatus = 1
+	TrackStatusComing    _           = 2
+	TrackStatusBoarding  _           = 3
+	TrackStatusDriving   _           = 4
+	TrackStatusPaying    _           = 5
+	TrackStatusCompleted _           = 6
+	TrackStatusCancel    _           = 10
+)
+
 type PaymentStatus uint8
 
+const (
+	PaymentStatusTOBePaid PaymentStatus = 1
+	PaymentStatusPaid     _             = 2
+)
+
 type PaymentMethod uint8
+
+const (
+	PaymentMethodAlipay   PaymentMethod = 1
+	PaymentMethodWeChat   _             = 2
+	PaymentMethodBankcard _             = 3
+	PaymentMethodCloudQuickPass         _             = 4
+)
 
 type Model struct {
 	CreatedAt time.Time
@@ -21,25 +53,25 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-type User struct {
+type TUser struct {
 	UserId   uint   `gorm:"colume:user_id;primary_key;AUTO_INCREMENT"`
 	UserName string `gorm:"colume:user_name;type:varchar(256);not null"`
 	Password string `gorm:"colume:password;type:varchar(256);not null"`
 	Phone    string `gorm:"colume:phone;type:varchar(20);not null"`
+	Model
+}
+
+type TDriver struct {
+	UserId   uint   `gorm:"colume:user_id;primary_key;AUTO_INCREMENT"`
+	UserName string `gorm:"colume:user_name;type:varchar(256);not null"`
+	Password string `gorm:"colume:password;type:varchar(256);not null"`
+	Phone    string `gorm:"colume:phone;type:varchar(256);not null"`
+	Distance uint   `gorm:"colume:distance;type:integer;default:0;not null"` //刚开始为0
+	CarId    uint   `gorm:"colume:car_id;type:integer;not null"`
 	*Model
 }
 
-type Driver struct {
-	DriverId   uint   `gorm:"colume:driver_id;primary_key;AUTO_INCREMENT"`
-	DriverName string `gorm:"colume:driver_name;type:varchar(256);not null"`
-	Password   string `gorm:"colume:password;type:varchar(256);not null"`
-	Phone      string `gorm:"colume:phone;type:varchar(256);not null"`
-	Distance   uint   `gorm:"colume:distance;type:integer;not null"`//刚开始为0
-	CarId      uint   `gorm:"colume:car_id;type:integer;not null"`
-	*Model
-}
-
-type Car struct {
+type TCar struct {
 	CarId    uint    `gorm:"colume:car_id;primary_key;AUTO_INCREMENT"`
 	CarNo    string  `gorm:"colume:car_no;type:varchar(256);not null"`
 	CarType  CarType `gorm:"colume:car_type;type:tinyint;not null"`
@@ -48,32 +80,36 @@ type Car struct {
 	*Model
 }
 
-type Track struct {
-	TrackId     uint        `gorm:"colume:user_id;primary_key;AUTO_INCREMENT"`
+type TTrack struct {
+	TrackId     uint        `gorm:"colume:track_id;primary_key;AUTO_INCREMENT"`
 	UserId      uint        `gorm:"colume:user_id;type:integer;not null"`
+	OrderId     uint        `gorm:"colume:order_id;type:integer"`
+	ServicerId  uint        `gorm:"colume:servicer_id;type:integer"`
 	SrcPoint    string      `gorm:"colume:scr_point;type:varchar(256);not null"`
 	DestPoint   string      `gorm:"colume:dest_point;type:varchar(256);not null"`
 	TrackStatus TrackStatus `gorm:"colume:track_status;type:tinyint;not null"`
-	Distance    uint        `gorm:"colume:distance;type:integer;not null"` //这个是用来展示和算总公里数
-	Duration    uint        `gorm:"colume:duration;type:integer;not null"` //这个是用来展示
-	StartTime   *time.Time  `gorm:"colume:start_time"`// 这里可能为空，这两个是用来算花费
-	EndTime     *time.Time  `gorm:"colume:end_time"`
+	Distance    uint        `gorm:"colume:distance;type:integer;not null;comment:公里数"`
+	Duration    uint        `gorm:"colume:duration;type:integer;not null;comment:时长"`
+	StartAt     *time.Time  `gorm:"colume:start_at"`
+	EndAt       *time.Time  `gorm:"colume:end_at"`
 	*Model
 }
 
-type Order struct {
-	OrderId   uint `gorm:"colume:order_id;primary_key;AUTO_INCREMENT"`
-	UserId    uint `gorm:"colume:user_id;type:integer;not null"`
-	ServiceId uint `gorm:"colume:service_id;type:integer;not null"`
-	PaymentId uint `gorm:"colume:payment_id;primary_key;AUTO_INCREMENT"`
-	StartCost uint `gorm:"colume:start_cost;type:integer;not null"`
-	UnitCost  uint `gorm:"colume:unit_cost;type:integet;not null"`
+type TOrder struct {
+	OrderId    uint `gorm:"colume:order_id;primary_key;AUTO_INCREMENT"`
+	UserId     uint `gorm:"colume:user_id;type:integer;not null"`
+	ServicerId uint `gorm:"colume:servicer_id;type:integer;not null"`
+	PaymentId  uint `gorm:"colume:payment_id;primary_key;AUTO_INCREMENT"`
+	StartCost  uint `gorm:"colume:start_cost;type:integer;not null"`
+	UnitCost   uint `gorm:"colume:unit_cost;type:integer;not null"`
+	Cost       uint `gorm:"colume:cost;type:integer"`
 	*Model
 }
 
-type Payment struct {
+type TPayment struct {
 	PaymentId     uint          `gorm:"colume:payment_id;primary_key;AUTO_INCREMENT"`
 	Cost          uint          `gorm:"colume:cost;type:integer;not null"`
-	PaymentMethod PaymentMethod `gorm:"colume:payment_method;type:tinyint"` //这里不传是为空么？
+	PaymentMethod PaymentMethod `gorm:"colume:payment_method;type:tinyint"`
+	PaymentStatus PaymentStatus `gorm:"colume:payment_status;type:tinyint"`
 	*Model
 }
