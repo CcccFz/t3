@@ -22,23 +22,31 @@ func UserRegister(c *gin.Context) {
 	checkUser := &entity.TUser{Phone: req.Phone}
 	err = store.DB.First(checkUser).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		log.Error().Err(err).Str("phone", req.Phone).Msg("用户注册")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/注册")
 		http.ErrJson(c, err)
+		return
 	} else if err == nil {
 		err = errors.New("用户已注册，请直接登录")
-		log.Error().Err(err).Str("phone", req.Phone).Msg("用户注册")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/注册")
 		http.ErrJson(c, err)
+		return
 	}
 
 	user := new(entity.TUser)
 	if err = copier.Copy(user, req); err != nil {
-		log.Error().Err(err).Str("phone", req.Phone).Msg("注册失败")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/注册")
 		http.ErrJson(c, err)
+		return
 	}
 	if err = store.DB.Create(&user).Error; err != nil {
-		log.Error().Err(err).Str("phone", req.Phone).Msg("注册失败")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/注册")
 		http.ErrJson(c, err)
+		return
 	}
+
+	log.Info().Str("phone", user.Phone).Uint("user_id", user.UserId).Msg("乘客/注册")
+	http.OkJson(c, nil)
+	return
 }
 
 func DriverRegister(c *gin.Context) {
