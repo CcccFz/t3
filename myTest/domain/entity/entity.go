@@ -8,15 +8,15 @@ import (
 type UserType uint8
 
 const (
-	UserTypeUser UserType = 1
-	UserTypeServicer _ = 2
+	UserTypeUser   UserType = 1 // 乘客
+	UserTypeDriver _        = 2 // 司机
 )
 
 type CarType uint8
 
 const (
 	CarTypeCosy      CarType = 1 // 优享
-	CarTypeFavorable _       = 1 // 惠享
+	CarTypeFavorable _       = 2 // 惠享
 )
 
 type TrackStatus uint8
@@ -34,17 +34,17 @@ const (
 type PaymentStatus uint8
 
 const (
-	PaymentStatusTOBePaid PaymentStatus = 1
+	PaymentStatusWaitPaid PaymentStatus = 1
 	PaymentStatusPaid     _             = 2
 )
 
 type PaymentMethod uint8
 
 const (
-	PaymentMethodAlipay   PaymentMethod = 1
-	PaymentMethodWeChat   _             = 2
-	PaymentMethodBankcard _             = 3
-	PaymentMethodCloudQuickPass         _             = 4
+	PaymentMethodAlipay         PaymentMethod = 1
+	PaymentMethodWeChat         _             = 2
+	PaymentMethodBankcard       _             = 3
+	PaymentMethodCloudQuickPass _             = 4
 )
 
 type Model struct {
@@ -66,7 +66,7 @@ type TDriver struct {
 	UserName string `gorm:"colume:user_name;type:varchar(256);not null"`
 	Password string `gorm:"colume:password;type:varchar(256);not null"`
 	Phone    string `gorm:"colume:phone;type:varchar(256);not null"`
-	Distance uint   `gorm:"colume:distance;type:integer;default:0;not null"` //刚开始为0
+	Distance uint   `gorm:"colume:distance;type:integer;default:0;not null"`
 	CarId    uint   `gorm:"colume:car_id;type:integer;not null"`
 	*Model
 }
@@ -110,6 +110,6 @@ type TPayment struct {
 	PaymentId     uint          `gorm:"colume:payment_id;primary_key;AUTO_INCREMENT"`
 	Cost          uint          `gorm:"colume:cost;type:integer;not null"`
 	PaymentMethod PaymentMethod `gorm:"colume:payment_method;type:tinyint"`
-	PaymentStatus PaymentStatus `gorm:"colume:payment_status;type:tinyint"`
+	PaymentStatus PaymentStatus `gorm:"colume:payment_status;type:tinyint;not null"`
 	*Model
 }
