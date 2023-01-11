@@ -15,7 +15,7 @@ func init() {
 
 func main() {
 	fmt.Println("码运昌隆！")
-	store.MyAuto()
+	store.MysqlAuto()
 	myHttp := gin.Default()
 
 	myHttp.POST("/api/t3/user/user/register", api.UserRegister)     // 乘客/注册

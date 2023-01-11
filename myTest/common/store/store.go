@@ -69,14 +69,17 @@ func init() {
 	println("atore")
 }
 
-func MyAuto() {
-	test := new(entity.Order)
-	user := new(entity.User)
+func mysqlAuto (table interface{}) {
+	if err := DB.AutoMigrate(table); err != nil {
+		fmt.Println("error")
+	}
+}
 
-	if err := DB.AutoMigrate(test); err != nil {
-		fmt.Println("error")
-	}
-	if err := DB.AutoMigrate(user); err != nil {
-		fmt.Println("error")
-	}
+func MysqlAuto() {
+	mysqlAuto(&entity.TUser{})
+	mysqlAuto(&entity.TDriver{})
+	mysqlAuto(&entity.TCar{})
+	mysqlAuto(&entity.TTrack{})
+	mysqlAuto(&entity.TOrder{})
+	mysqlAuto(&entity.TPayment{})
 }

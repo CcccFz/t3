@@ -1,12 +1,44 @@
 package api
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
+	"github.com/rs/zerolog/log"
+	"gorm.io/gorm"
+	"main/myTest/common/http"
+	"main/myTest/common/store"
+	"main/myTest/domain/entity"
 	"main/myTest/interface/dto"
 )
 
 func UserRegister(c *gin.Context) {
 	req := new(dto.UserRegisterReq)
+	err := c.Bind(req)
+	if err != nil {
+		http.ErrJson(c, err)
+	}
+
+	checkUser := &entity.TUser{Phone: req.Phone}
+	err = store.DB.First(checkUser).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		log.Error().Err(err).Str("phone", req.Phone).Msg("用户注册")
+		http.ErrJson(c, err)
+	} else if err == nil {
+		err = errors.New("用户已注册，请直接登录")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("用户注册")
+		http.ErrJson(c, err)
+	}
+
+	user := new(entity.TUser)
+	if err = copier.Copy(user, req); err != nil {
+		log.Error().Err(err).Str("phone", req.Phone).Msg("注册失败")
+		http.ErrJson(c, err)
+	}
+	if err = store.DB.Create(&user).Error; err != nil {
+		log.Error().Err(err).Str("phone", req.Phone).Msg("注册失败")
+		http.ErrJson(c, err)
+	}
 }
 
 func DriverRegister(c *gin.Context) {
