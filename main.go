@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/rs/zerolog/log"
 	"main/myTest/common/jwt"
 	"main/myTest/common/store"
 	"main/myTest/interface/api"
+
+	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 func init() {
@@ -18,9 +19,10 @@ func main() {
 	store.MysqlAuto()
 	myHttp := gin.Default()
 
-	myHttp.POST("/api/t3/user/user/register", api.UserRegister)     // 乘客/注册
+	myHttp.POST("/api/t3/user/user/register", api.UserRegister) // 乘客/注册
+	myHttp.POST("/api/t3/user/user/login", api.UserLogin)       // 乘客/登录
+
 	myHttp.POST("/api/t3/user/driver/register", api.DriverRegister) // 司机/注册
-	myHttp.POST("/api/t3/user/user/login", api.UserLogin)           // 乘客/登录
 	myHttp.POST("/api/t3/user/driver/login", api.DriverLogin)       // 司机/登录
 
 	// t3go URL

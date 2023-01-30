@@ -2,14 +2,16 @@ package api
 
 import (
 	"errors"
+	"main/myTest/common/http"
+	"main/myTest/common/jwt"
+	"main/myTest/common/store"
+	"main/myTest/domain/entity"
+	"main/myTest/interface/dto"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
-	"main/myTest/common/http"
-	"main/myTest/common/store"
-	"main/myTest/domain/entity"
-	"main/myTest/interface/dto"
 )
 
 func UserRegister(c *gin.Context) {
@@ -49,12 +51,39 @@ func UserRegister(c *gin.Context) {
 	return
 }
 
-func DriverRegister(c *gin.Context) {
-	req := new(dto.DriverRegisterReq)
-}
-
 func UserLogin(c *gin.Context) {
 	req := new(dto.UserLoginReq)
+	err := c.Bind(req)
+	if err != nil {
+		http.ErrJson(c, err)
+		return
+	}
+
+	checkUser := new(entity.TUser)
+	checkUser.Phone = req.Phone
+	err = store.DB.First(checkUser).Error
+	if err != nil {
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/登录")
+		http.ErrJson(c, err)
+		return
+	} else if err == nil && checkUser.Password != req.Password {
+		err = errors.New("密码错误，请重新登录")
+		log.Error().Err(err).Str("phone", req.Phone).Msg("乘客/登录")
+		http.ErrJson(c, err)
+		return
+	}
+	var token string
+	token, err = jwt.GenToken(checkUser.UserId, entity.UserTypeUser, store.CACHE)
+	c.Header("Authorization", token)
+
+	log.Info().Str("phone", checkUser.Phone).Uint("user_id", checkUser.UserId).Msg("乘客/登录")
+	http.OkJson(c, nil)
+	return
+}
+
+func DriverRegister(c *gin.Context) {
+	req := new(dto.DriverRegisterReq)
+
 }
 
 func DriverLogin(c *gin.Context) {
